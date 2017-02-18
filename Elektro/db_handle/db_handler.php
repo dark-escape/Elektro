@@ -58,7 +58,7 @@ class db_handler {
 	public function newFriend($data) {
 		$rsp=array();
 		$rsp['error']=true;
-		$rsp['msg']="Unsuccessful attempt.";
+		$rsp['msg']="Unsuccessful attempt";
 		
 		if ($this->isAlreadyFriend($data)) {
 			$rsp['msg']="Already friend";
