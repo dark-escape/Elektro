@@ -16,7 +16,7 @@ $app->post('/register', function (Request $req, Response $res) {
 	$dbh=new db_handler();
 	$body = $req->getParsedBody();
 	$body=$dbh->newUser($body);
-	echo $body;
+	// echo $body;
 	return $res->withJson($body);
 });
 

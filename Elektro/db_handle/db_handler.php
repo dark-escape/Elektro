@@ -111,7 +111,7 @@ class db_handler {
 			$res=$stmt->get_result();
 
 			while($row = $res->fetch_array(MYSQLI_ASSOC)) {
-				echo $row['user_id'].',';
+				// echo $row['user_id'].',';
 				if ($row['user_id']==$id) {
 					array_push($friend_id_list, $row['friend_id']);
 				} else {
