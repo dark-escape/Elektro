@@ -8,7 +8,7 @@ class db_handler {
 	private $dbcon;
 	function __construct() {
 		$this->dbcon=new db_connect();
-		echo "connect";
+		// echo "connect";
 		$this->mysqli_link=$this->dbcon->connect();
 
 	}
@@ -49,7 +49,7 @@ class db_handler {
 
 	private function isAlreadyFriend($data) {
 
-		$stmt=$this->mysqli_link->prepare("SELECT * FROM has_a_friend WHERE friend_id=? and user_id=?");
+		$stmt=$this->mysqli_link->prepare("SELECT * FROM has_a_friend WHERE user_id=? and friend_id=?");
 		$stmt->bind_param('ii',$data['f_id'],$data['u_id']);
 		$stmt->execute();
 		$stmt->store_result();
@@ -111,7 +111,8 @@ class db_handler {
 			$res=$stmt->get_result();
 
 			while($row = $res->fetch_array(MYSQLI_ASSOC)) {
-				if ($row['user_id']===$id) {
+				echo $row['user_id'].',';
+				if ($row['user_id']==$id) {
 					array_push($friend_id_list, $row['friend_id']);
 				} else {
 					array_push($friend_id_list, $row['user_id']);
@@ -223,5 +224,5 @@ class db_handler {
 // 'u_id' => 9475846,
 // 'pass' => "you ain't got no chill"
 // 	)));
-// print_r($db->getFriends(9475846));
+// print_r($db->getFriends(4782369));
 // print_r($db->getSongsOfFriend(4782369));

@@ -45,7 +45,7 @@ $app->get('/my-friends/{u_id}' , function (Request $req, Response $res) {
 	return $res->withJson($body);//body is json_encoded
 });
 
-$app->get('/friend-song/{f_id}' , function (Request $req, Response $res) {
+$app->get('/friend-songs/{f_id}' , function (Request $req, Response $res) {
 	$id=$req->getAttribute('f_id');
 	$dbh=new db_handler();
 	$body=$dbh->getSongsOfFriend($id);
@@ -56,8 +56,8 @@ $app->post('/login' , function (Request $req, Response $res) {
 	// $id=$req->getAttribute('id');
 	$dbh=new db_handler();
 	$body=$req->getParsedBody();
-	
-	$body=$dbh->login($body);
+	// print_r($body['pass']);
+	$body=$dbh->userLogin($body);
 	return $res->withJson($body);
 });
 
