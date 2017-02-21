@@ -3,4 +3,4 @@ RewriteBase /Elektro/v1/
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
+RewriteRule ^(.*)$ index.php [QSA,L]
