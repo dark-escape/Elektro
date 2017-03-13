@@ -1,5 +1,6 @@
 package com.stonecode.elektro;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -24,27 +25,30 @@ import java.util.Map;
 
 public class ServerRequests {
 
-    private RequestCallback callback;
     Context ctx;
-    private final String HOST = "localhost";
-    private final String LOGIN = "http://" + HOST + "/Elektro/v1/login";
-    private final String FRIEND_SONGS = "http://" + HOST + "/Elektro/v1/friend-songs/";
-    private final String MY_FRIENDS = "http://" + HOST + "/Elektro/v1/my-friends/";
-    private final String NEW_SONG = "http://" + HOST + "/Elektro/v1/new-song";
-    private final String NEW_FRIEND = "http://" + HOST + "/Elektro/v1/new-friend";
-    private final String NEW_USER = "http://" + HOST + "/Elektro/v1/register";
+    private final String HOST = "https://app-elektro.herokuapp.com";
+    private final String LOGIN = HOST + "/login";
+    private final String FRIEND_SONGS = HOST + "/friend-songs/";
+    private final String MY_FRIENDS = HOST + "/my-friends/";
+    private final String NEW_SONG = HOST + "/new-song";
+    private final String NEW_FRIEND = HOST + "/new-friend";
+    private final String NEW_USER = HOST + "/register";
     private static final String TAG = "ServerRequests";
 
+    private ProgressDialog pd;
 
-    public ServerRequests(Context ctx) {
+    ServerRequests(Context ctx) {
         this.ctx = ctx;
+        pd=new ProgressDialog(ctx,ProgressDialog.THEME_DEVICE_DEFAULT_DARK);
+        pd.setTitle("Crunching database....");
+        pd.setCancelable(false);
+        pd.setCanceledOnTouchOutside(false);
+        pd.setMessage("Please wait...");
+        pd.setIndeterminate(true);
+//        pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
     }
 
-    void setCallback(RequestCallback callback) {
-        this.callback = callback;
-    }
-
-    void newUser(final String name, final int age, final String email, final String pass) {
+    void newUser(final String name, final int age, final String email, final String pass, final RequestCallback callback) {
         StringRequest req = new StringRequest(
                 Request.Method.POST,
                 NEW_USER,
@@ -55,6 +59,7 @@ public class ServerRequests {
                             Log.d(TAG, "onResponse: " + response);
                             JSONObject jsonObject = new JSONObject(response);
                             if (callback != null) callback.response(jsonObject);
+                            pd.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -65,6 +70,7 @@ public class ServerRequests {
                     public void onErrorResponse(VolleyError error) {
                         Log.d(TAG, "onErrorResponse: " + error.getMessage());
                         if (callback != null) callback.response(null);
+                        pd.dismiss();
                     }
                 }
         ) {
@@ -84,9 +90,10 @@ public class ServerRequests {
             }
         };
         Volley.newRequestQueue(ctx).add(req);
+        pd.show();
     }
 
-    void newFriend(final int myID, final int fID) {
+    void newFriend(final int myID, final int fID,final RequestCallback callback) {
         StringRequest req = new StringRequest(
                 Request.Method.POST,
                 NEW_FRIEND,
@@ -97,6 +104,7 @@ public class ServerRequests {
                             Log.d(TAG, "onResponse: " + response);
                             JSONObject jo=new JSONObject(response);
                             if (callback != null) callback.response(jo);
+                            pd.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -107,6 +115,7 @@ public class ServerRequests {
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null) callback.response(null);
                         Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                        pd.dismiss();
                     }
                 }
         ) {
@@ -123,10 +132,11 @@ public class ServerRequests {
                 return "application/x-www-form-urlencoded; charset=UTF-8";
             }
         };
+        pd.show();
         Volley.newRequestQueue(ctx).add(req);
     }
 
-    void newSong(final int myID, final String song) {
+    void newSong(final int myID, final String song,final RequestCallback callback) {
         StringRequest req = new StringRequest(
                 Request.Method.POST,
                 NEW_SONG,
@@ -137,6 +147,7 @@ public class ServerRequests {
                             Log.d(TAG, "onResponse: " + response);
                             JSONObject jo=new JSONObject(response);
                             if (callback != null) callback.response(jo);
+                            pd.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -147,6 +158,7 @@ public class ServerRequests {
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null) callback.response(null);
                         Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                        pd.dismiss();
                     }
                 }
         ) {
@@ -163,10 +175,11 @@ public class ServerRequests {
                 return "application/x-www-form-urlencoded; charset=UTF-8";
             }
         };
+        pd.show();
         Volley.newRequestQueue(ctx).add(req);
     }
 
-    void login(final int myID, final String pass) {
+    void login(final int myID, final String pass,final RequestCallback callback) {
         StringRequest req = new StringRequest(
                 Request.Method.POST,
                 LOGIN,
@@ -177,6 +190,7 @@ public class ServerRequests {
                             Log.d(TAG, "onResponse: " + response);
                             JSONObject jo=new JSONObject(response);
                             if (callback != null) callback.response(jo);
+                            pd.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -187,6 +201,7 @@ public class ServerRequests {
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null) callback.response(null);
                         Log.d(TAG, "onErrorResponse: " + error.getMessage());
+                        pd.dismiss();
                     }
                 }
         ) {
@@ -203,10 +218,11 @@ public class ServerRequests {
                 return "application/x-www-form-urlencoded; charset=UTF-8";
             }
         };
+        pd.show();
         Volley.newRequestQueue(ctx).add(req);
     }
 
-    void getMyFriends(int myID) {
+    void getMyFriends(int myID,final RequestCallback callback) {
         JsonObjectRequest req = new JsonObjectRequest(
                 Request.Method.GET,
                 MY_FRIENDS + myID,
@@ -215,18 +231,21 @@ public class ServerRequests {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (callback != null) callback.response(response);
+                        pd.dismiss();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (callback != null) callback.response(null);
+                        pd.dismiss();
                     }
                 });
+        pd.show();
         Volley.newRequestQueue(ctx).add(req);
     }
 
-    void getFriendSongs(int fID) {
+    void getFriendSongs(int fID,final RequestCallback callback) {
         JsonObjectRequest req = new JsonObjectRequest(
                 Request.Method.GET,
                 FRIEND_SONGS + fID,
@@ -234,16 +253,19 @@ public class ServerRequests {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        pd.dismiss();
                         if (callback != null) callback.response(response);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        pd.dismiss();
                         if (callback != null) callback.response(null);
                     }
                 });
         Volley.newRequestQueue(ctx).add(req);
+        pd.show();
     }
 
     interface RequestCallback {

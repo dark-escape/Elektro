@@ -13,40 +13,45 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:hint="UserID"
-        android:background="@drawable/et_back"
+        android:textColorHint="#BBB"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true">
 
 
         <EditText
-            android:background="@android:color/transparent"
-            android:inputType="numberDecimal"
+            android:id="@+id/et_uid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
         android:layout_marginTop="10dp"
+        android:hint="Password"
+        android:textColorHint="#BBB"
         app:hintAnimationEnabled="true"
-
         app:hintEnabled="true">
 
 
         <EditText
+            android:id="@+id/et_pass"
             android:layout_width="match_parent"
-            android:inputType="textVisiblePassword"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:inputType="textPassword"
+            android:textColor="@android:color/white" />
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:layout_marginTop="20dp"
+        android:id="@+id/bt_login"
         android:layout_width="match_parent"
-        android:text="Barge In"
-        android:textColor="@android:color/white"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:background="@drawable/bt_back"
-        android:layout_height="wrap_content" />
+        android:text="Barge In"
+        android:textColor="@android:color/white" />
 </LinearLayout>

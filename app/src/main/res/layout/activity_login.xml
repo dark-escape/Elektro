@@ -1,30 +1,48 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/guitar_for_9"
+    android:background="#444"
+    android:orientation="vertical"
     tools:context="com.stonecode.elektro.LoginActivity">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#AA004477">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        android:src="@drawable/listening" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:typeface="monospace"
+        android:text="@string/app_name"
+        android:layout_gravity="center_horizontal"
+        android:textSize="30sp"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="30dp"
-        android:layout_height="300dp">
+        android:padding="15dp">
         <!-- The primary full-screen view. This can be replaced with whatever view
              is needed to present your content, e.g. VideoView, SurfaceView,
              TextureView, etc. -->
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tabMode="fixed" />
+            app:tabIndicatorColor="@android:color/holo_blue_dark"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@android:color/white" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
@@ -33,5 +51,4 @@
 
 
     </LinearLayout>
-    </FrameLayout>
-</FrameLayout>
+</LinearLayout>

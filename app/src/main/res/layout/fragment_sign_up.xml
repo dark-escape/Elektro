@@ -14,29 +14,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Name"
+        android:textColorHint="#BBB"
         app:hintAnimationEnabled="true"
         app:hintEnabled="true">
 
 
         <EditText
-            android:inputType="textAutoComplete"
+            android:textColor="@android:color/white"
+            android:id="@+id/et_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:inputType="textAutoComplete" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Age"
+        android:textColorHint="#BBB"
         app:hintAnimationEnabled="true"
 
         app:hintEnabled="true">
 
 
         <EditText
-            android:inputType="numberDecimal"
+            android:id="@+id/et_age"
+
+            android:textColor="@android:color/white"
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:inputType="numberDecimal" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -44,28 +52,48 @@
         android:layout_height="wrap_content"
         android:hint="Email"
         app:hintAnimationEnabled="true"
+        android:textColorHint="#BBB"
 
         app:hintEnabled="true">
 
 
         <EditText
-            android:inputType="textEmailAddress"
+            android:id="@+id/et_email"
+            android:textColor="@android:color/white"
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Password"
+
         app:hintAnimationEnabled="true"
+        android:textColorHint="#BBB"
 
         app:hintEnabled="true">
 
 
         <EditText
-            android:inputType="textVisiblePassword"
+            android:id="@+id/et_pass"
+
+            android:textColor="@android:color/white"
+
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bt_back"
+        android:text="Register"
+        android:id="@+id/register"
+        android:textColor="@android:color/white" />
 </LinearLayout>
