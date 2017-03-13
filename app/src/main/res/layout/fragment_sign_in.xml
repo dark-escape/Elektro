@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    tools:context="com.stonecode.elektro.SignInFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="UserID"
+        android:background="@drawable/et_back"
+        app:hintAnimationEnabled="true"
+        app:hintEnabled="true">
+
+
+        <EditText
+            android:background="@android:color/transparent"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:layout_marginTop="10dp"
+        app:hintAnimationEnabled="true"
+
+        app:hintEnabled="true">
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:inputType="textVisiblePassword"
+            android:layout_height="match_parent" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:text="Barge In"
+        android:textColor="@android:color/white"
+        android:background="@drawable/bt_back"
+        android:layout_height="wrap_content" />
+</LinearLayout>
