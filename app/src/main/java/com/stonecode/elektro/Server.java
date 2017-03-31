@@ -1,6 +1,9 @@
 package com.stonecode.elektro;
 
+import android.os.AsyncTask;
+
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -10,12 +13,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.StringTokenizer;
 
 import needle.Needle;
 
 /**
  * Created by vishal on 3/25/17.
  */
+
+
 
 public class Server {
     Test activity;
@@ -26,8 +32,9 @@ public class Server {
 
     public Server(Test activity) {
         this.activity = activity;
-        Thread socketServerThread = new Thread(new SocketServerThread());
-        socketServerThread.start();
+//        Thread socketServerThread = new Thread(new SocketServerThread());
+//        socketServerThread.start();
+        new SocketServerThread().execute();
     }
 
     public int getPort() {
@@ -45,11 +52,11 @@ public class Server {
         }
     }
 
-    private class SocketServerThread extends Thread {
+    private class SocketServerThread extends AsyncTask<Void,Void,Void> {
 
         int count = 0;
+        String msg="";
 
-        @Override
         public void run() {
             try {
                 // create ServerSocket using specified port
@@ -85,9 +92,10 @@ public class Server {
 //                        }
 //                    });
 
-//                    SocketServerReplyThread socketServerReplyThread =
-//                            new SocketServerReplyThread(socket, count,"You are connected.");
-//                    socketServerReplyThread.run();
+                    SocketServerReplyThread socketServerReplyThread =
+                            new SocketServerReplyThread(socket, count,"You are connected.");
+                    socketServerReplyThread.run();
+                    serverSocket.close();
 
                 }
             } catch (IOException e) {
@@ -95,7 +103,19 @@ public class Server {
                 e.printStackTrace();
             }
         }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            run();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
+
 
     public Socket getSocket() {
         return socket;
@@ -119,15 +139,16 @@ public class Server {
 
         @Override
         public void run() {
-            OutputStream outputStream;
+            DataOutputStream outputStream;
             String msgReply = "Hello from Server, you are #" + cnt;
 
             try {
                 if (hostThreadSocket==null) return;
-                outputStream = hostThreadSocket.getOutputStream();
-                PrintStream printStream = new PrintStream(outputStream);
-                printStream.print(reply);
-                printStream.close();
+                outputStream = new DataOutputStream(hostThreadSocket.getOutputStream());
+                outputStream.writeUTF("Bruh! I just got your msg.");
+//                PrintStream printStream = new PrintStream(outputStream);
+//                printStream.print(reply);
+//                printStream.close();
 
 //                message += "replayed: " + msgReply + "\n";
 //
@@ -138,6 +159,7 @@ public class Server {
 ////                        activity.tv.append(message+"\n");
 //                    }
 //                });
+                hostThreadSocket.close();
 
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -149,7 +171,7 @@ public class Server {
 
                 @Override
                 public void run() {
-                    activity.tv.append("Me:"+message+"\n");
+//                    activity.tv.append("Me:"+message+"\n");
                 }
             });
         }
@@ -184,5 +206,7 @@ public class Server {
         }
         return ip;
     }
+
+
 
 }

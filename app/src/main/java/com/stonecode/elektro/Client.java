@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -18,7 +19,7 @@ import needle.Needle;
  * Created by vishal on 3/25/17.
  */
 
-public class Client /*extends AsyncTask<Void, Void, Void>*/ {
+public class Client extends AsyncTask<Void, Void, Void> {
     String dstAddress;
     int dstPort;
     String response = "";
@@ -35,28 +36,35 @@ public class Client /*extends AsyncTask<Void, Void, Void>*/ {
 
     }
 
-    //    @Override
+    @Override
     protected Void doInBackground(Void... arg0) {
 
-        Socket socket = null;
-
+//        Socket socket = null;
         try {
+            socket=new Socket(dstAddress,dstPort);
 
+            test.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textResponse.append("Own side:Just connected to " + socket.getRemoteSocketAddress());
+                }
+            });
 
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(
-                    1024);
-            byte[] buffer = new byte[1024];
+            OutputStream outToServer = socket.getOutputStream();
+            DataOutputStream out = new DataOutputStream(outToServer);
 
-            int bytesRead;
-            InputStream inputStream = socket.getInputStream();
+            out.writeUTF("Hello from " + socket.getLocalSocketAddress());
+            InputStream inFromServer = socket.getInputStream();
+            final DataInputStream in = new DataInputStream(inFromServer);
+            final String msg=in.readUTF();
+            test.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textResponse.append("Server says " + msg);
 
-			/*
-             * notice: inputStream.read() will block if no data return
-			 */
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                byteArrayOutputStream.write(buffer, 0, bytesRead);
-                response += byteArrayOutputStream.toString("UTF-8");
-            }
+                }
+            });
+            socket.close();
 
 
         } catch (UnknownHostException e) {
@@ -81,58 +89,55 @@ public class Client /*extends AsyncTask<Void, Void, Void>*/ {
 //        return response;
     }
 
-    //    @Override
+    @Override
     protected void onPostExecute(Void result) {
-        textResponse.append(response + "\n");
-//        super.onPostExecute(result);
+        super.onPostExecute(result);
+//        textResponse.append(response + "\n");
     }
 
     void clientRead() {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socket = new Socket(dstAddress, dstPort);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                while (true) {
                     try {
-                        socket = new Socket(dstAddress, dstPort);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    while (true) {
-                        try {
 
-                            DataInputStream dis = new DataInputStream(socket.getInputStream());
-                            final String string = dis.readUTF();
-                            if (!string.isEmpty()) {
-                                Needle.onMainThread().execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        textResponse.append("Server: ");
-                                        textResponse.append(string);
-
-                                    }
-                                });
-                            }
-                        } catch (IOException e) {
-                            test.runOnUiThread(new Runnable() {
+                        DataInputStream dis = new DataInputStream(socket.getInputStream());
+                        final String string = dis.readUTF();
+                        if (!string.isEmpty()) {
+                            Needle.onMainThread().execute(new Runnable() {
                                 @Override
                                 public void run() {
-                                    textResponse.append("error\n");
+                                    textResponse.append("Server: ");
+                                    textResponse.append(string);
 
                                 }
                             });
-                            try {
-                                Thread.sleep(1000);
-                                System.exit(0);
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
+                        }
+                    } catch (IOException e) {
+                        test.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textResponse.append("error\n");
+
                             }
+                        });
+                        try {
+                            Thread.sleep(1000);
+                            System.exit(0);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
                         }
                     }
                 }
-            }).run();
-
-
-
+            }
+        }).run();
 
 
     }

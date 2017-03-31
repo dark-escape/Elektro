@@ -51,7 +51,7 @@ public class Test extends AppCompatActivity {
                 send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        server.serverSend(et.getText().toString());
+//                        server.serverSend(et.getText().toString());
                     }
                 });
             }
@@ -81,23 +81,23 @@ public class Test extends AppCompatActivity {
                     tv.append("HWAddr: " + clientScanResult.getHWAddr() + "\n");
                     tv.append("isReachable: " + clientScanResult.isReachable() + "\n");
 //                    startSock(clients);
-                    client = new Client(clientScanResult.getIpAddr(), 8080, Test.this,tv);
-                    Needle.onBackgroundThread().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            client.clientRead();
-                        }
-                    });
+//                    client = new Client(clientScanResult.getIpAddr(), 8080, Test.this,tv);
+//                    Needle.onBackgroundThread().execute(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            client.clientRead();
+//                        }
+//                    });
 
-//                    Client myClient = new Client(clientScanResult.getIpAddr(), 8080, tv);
-//                    myClient.execute();
+                    Client myClient = new Client(clientScanResult.getIpAddr(), 8080, Test.this, tv);
+                    myClient.execute();
                 }
             }
         });
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.clientWrite(et.getText().toString());
+//                client.clientWrite(et.getText().toString());
             }
         });
     }
@@ -106,7 +106,7 @@ public class Test extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        server.onDestroy();
+//        server.onDestroy();
     }
 
 
@@ -148,7 +148,6 @@ public class Test extends AppCompatActivity {
             }
         }
     }
-
 
 
     private void startStockServer() {
