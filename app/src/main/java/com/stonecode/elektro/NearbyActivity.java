@@ -99,12 +99,13 @@ public class NearbyActivity extends AppCompatActivity implements
         mDebugInfo.setMovementMethod(new ScrollingMovementMethod());
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
+//                .enableAutoManage(this, this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Nearby.CONNECTIONS_API)
-                .useDefaultAccount()
+//                .useDefaultAccount()
                 .build();
+//        mGoogleApiClient.connect();
 
 
     }
@@ -167,7 +168,7 @@ public class NearbyActivity extends AppCompatActivity implements
         long NO_TIMEOUT = 0L;
 
         String name = null;
-        Nearby.Connections.startAdvertising(mGoogleApiClient, name, null, NO_TIMEOUT,
+        Nearby.Connections.startAdvertising(mGoogleApiClient, name, null/*APP META DATA*/, NO_TIMEOUT,
                 new Connections.ConnectionRequestListener() {
                     @Override
                     public void onConnectionRequest(String endpointId, String endPointName, byte[] payload) {
@@ -283,7 +284,6 @@ public class NearbyActivity extends AppCompatActivity implements
         // Try to re-connect
 //        assert mGoogleApiClient!=null;
         mGoogleApiClient.reconnect();
-//        mGoogleApiClient.blockingConnect();
     }
 
     @Override
@@ -387,6 +387,7 @@ public class NearbyActivity extends AppCompatActivity implements
         // based on device model such as 'LGE Nexus 5'.
         String myName = null;
         byte[] myPayload = null;
+//        mGoogleApiClient.connect();
         Nearby.Connections.sendConnectionRequest(mGoogleApiClient, myName,
                 endpointId, myPayload, new Connections.ConnectionResponseCallback() {
                     @Override
