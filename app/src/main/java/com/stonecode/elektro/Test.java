@@ -1,5 +1,6 @@
 package com.stonecode.elektro;
 
+import android.media.AudioTrack;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;

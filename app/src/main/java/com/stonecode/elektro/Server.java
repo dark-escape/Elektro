@@ -1,5 +1,8 @@
 package com.stonecode.elektro;
 
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.os.AsyncTask;
 
 import java.io.DataInputStream;
@@ -20,7 +23,6 @@ import needle.Needle;
 /**
  * Created by vishal on 3/25/17.
  */
-
 
 
 public class Server {
@@ -52,38 +54,50 @@ public class Server {
         }
     }
 
-    private class SocketServerThread extends AsyncTask<Void,Void,Void> {
+    private class SocketServerThread extends AsyncTask<Void, Void, Void> {
 
         int count = 0;
-        String msg="";
+        String msg = "";
+        AudioTrack audioTrack;
+
 
         public void run() {
             try {
+
                 // create ServerSocket using specified port
                 serverSocket = new ServerSocket(socketServerPORT);
 
-                while (true) {
-                    socket = serverSocket.accept();
-                    // block the call until connection is created and return
-                    // Socket object
+//                while (true) {
+                socket = serverSocket.accept();
+                int minSize = AudioTrack.getMinBufferSize(44100, AudioFormat.CHANNEL_CONFIGURATION_STEREO, AudioFormat.ENCODING_PCM_16BIT);
+
+                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
+                        AudioFormat.CHANNEL_OUT_STEREO,
+                        AudioFormat.ENCODING_PCM_16BIT, minSize,
+                        AudioTrack.MODE_STREAM);
+                audioTrack.play();
+                // block the call until connection is created and return
+                // Socket object
 //                    count++;
 //                    message += "#" + count + " from "
 //                            + socket.getInetAddress() + ":"
 //                            + socket.getPort() + "\n";
-                    DataInputStream dis = new DataInputStream(socket.getInputStream());
-                    final String string = dis.readUTF();
-                    Needle.onMainThread().execute(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!string.isEmpty()) {
+                DataInputStream dis = new DataInputStream(socket.getInputStream());
+                final String string = dis.readUTF();
 
-                                        activity.tv.append("Client:"
-                                                + string);
-                                    }
+
+                Needle.onMainThread().execute(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!string.isEmpty()) {
+
+                                    activity.tv.append("Client:"
+                                            + string);
                                 }
                             }
-                    );
+                        }
+                );
 
 //                    activity.runOnUiThread(new Runnable() {
 //                        @Override
@@ -92,12 +106,12 @@ public class Server {
 //                        }
 //                    });
 
-                    SocketServerReplyThread socketServerReplyThread =
-                            new SocketServerReplyThread(socket, count,"You are connected.");
-                    socketServerReplyThread.run();
-                    serverSocket.close();
+                SocketServerReplyThread socketServerReplyThread =
+                        new SocketServerReplyThread(socket, count, "You are connected.");
+                socketServerReplyThread.run();
+                serverSocket.close();
 
-                }
+//                }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -122,7 +136,7 @@ public class Server {
     }
 
     void serverSend(String rep) {
-        new SocketServerReplyThread(socket,0,rep).run();
+        new SocketServerReplyThread(socket, 0, rep).run();
     }
 
     public class SocketServerReplyThread extends Thread {
@@ -134,7 +148,7 @@ public class Server {
         SocketServerReplyThread(Socket socket, int c, String reply) {
             hostThreadSocket = socket;
             cnt = c;
-            this.reply=reply;
+            this.reply = reply;
         }
 
         @Override
@@ -143,7 +157,7 @@ public class Server {
             String msgReply = "Hello from Server, you are #" + cnt;
 
             try {
-                if (hostThreadSocket==null) return;
+                if (hostThreadSocket == null) return;
                 outputStream = new DataOutputStream(hostThreadSocket.getOutputStream());
                 outputStream.writeUTF("Bruh! I just got your msg.");
 //                PrintStream printStream = new PrintStream(outputStream);
@@ -206,7 +220,6 @@ public class Server {
         }
         return ip;
     }
-
 
 
 }
